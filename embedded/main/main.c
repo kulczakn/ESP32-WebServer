@@ -1,33 +1,3 @@
-/*
-Copyright (c) 2017 Tony Pottier
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-@file main.c
-@author Tony Pottier
-@brief Entry point for the ESP32 application.
-@see https://idyl.io
-@see https://github.com/tonyp7/esp32-wifi-manager
-*/
-
-
-
 #include <stdio.h>
 #include <string.h>
 #include "freertos/FreeRTOS.h"
@@ -47,13 +17,14 @@ SOFTWARE.
 #include "lwip/err.h"
 #include "lwip/netdb.h"
 
-#include "http_server.h"
-#include "wifi_manager.h"
+#include "m_http_server.h"
+#include "m_wifi.h"
 
+#include "WebSocket_Task.h"
 
+#define TAG "main.c"
 
-static TaskHandle_t task_http_server = NULL;
-static TaskHandle_t task_wifi_manager = NULL;
+TaskHandle_t task_http_server = NULL;
 
 /**
  * @brief RTOS task that periodically prints the heap memory available.
@@ -61,32 +32,70 @@ static TaskHandle_t task_wifi_manager = NULL;
  */
 void monitoring_task(void *pvParameter)
 {
-	for(;;){
+	while(1)
+	{
 		printf("free heap: %d\n",esp_get_free_heap_size());
 		vTaskDelay(5000 / portTICK_PERIOD_MS);
 	}
 }
 
+//WebSocket frame receive queue
+QueueHandle_t WebSocket_rx_queue;
+
+void task_process_WebSocket( void *pvParameters ){
+    (void)pvParameters;
+
+    //frame buffer
+    WebSocket_frame_t __RX_frame;
+
+    //create WebSocket RX Queue
+    WebSocket_rx_queue = xQueueCreate(10, sizeof(WebSocket_frame_t));
+
+    while (1){
+        //receive next WebSocket frame from queue
+        if(xQueueReceive(WebSocket_rx_queue,&__RX_frame, 3*portTICK_PERIOD_MS)==pdTRUE){
+
+        	//write frame inforamtion to UART
+        	printf("New Websocket frame. Length %d, payload %.*s \r\n", __RX_frame.payload_length, __RX_frame.payload_length, __RX_frame.payload);
+
+        	//loop back frame
+        	WS_write_data(__RX_frame.payload, __RX_frame.payload_length);
+
+        	//free memory
+			if (__RX_frame.payload != NULL)
+				free(__RX_frame.payload);
+        }
+    }
+}
 
 void app_main()
 {
-
-
-	/* disable the default wifi logging */
-	esp_log_level_set("wifi", ESP_LOG_NONE);
+	// /* disable the default wifi logging */
+	// esp_log_level_set("wifi", ESP_LOG_NONE);
 
 	/* initialize flash memory */
 	nvs_flash_init();
 
 	/* start the HTTP Server task */
 	xTaskCreate(&http_server, "http_server", 2048, NULL, 5, &task_http_server);
+	ESP_LOGI(TAG, "Http server task started.");
 
-	/* start the wifi manager task */
-	xTaskCreate(&wifi_manager, "wifi_manager", 4096, NULL, 4, &task_wifi_manager);
+	/* Initialize wifi access point */
+	wifi_init();
+	ESP_LOGI(TAG, "Wifi access point task started.");
+
+	//create WebSocker receive task
+    xTaskCreate(&task_process_WebSocket, "ws_process_rx", 2048, NULL, 5, NULL);
+    ESP_LOGI(TAG, "Websocket processing task started.");
+
+    //Create Websocket Server Task
+    xTaskCreate(&ws_server, "ws_server", 2048, NULL, 5, NULL);
+    ESP_LOGI(TAG, "Websocket server task started.");
 
 	/* your code should go here. In debug mode we create a simple task on core 2 that monitors free heap memory */
 #if WIFI_MANAGER_DEBUG
 	xTaskCreatePinnedToCore(&monitoring_task, "monitoring_task", 2048, NULL, 1, NULL, 1);
+	ESP_LOGI(TAG, "Monitoring task started.");
 #endif
 
 
