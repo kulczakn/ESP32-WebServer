@@ -38,9 +38,6 @@ function to process requests, decode URLs, serve files, etc. etc.
 extern "C" {
 #endif
 
-#define HTTP_SERVER_START_BIT_0	( 1 << 0 )
-
-
 void http_server(void *pvParameters);
 void http_server_netconn_serve(struct netconn *conn);
 void http_server_set_event_start();

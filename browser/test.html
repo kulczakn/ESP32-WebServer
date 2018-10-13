@@ -2,18 +2,18 @@
 
 <head>
 	<script>
-		var socket = new WebSocket("ws://localhost:8080");
+		var socket = new WebSocket("ws://192.168.1.1:9998");
 
 		socket.onopen = function(){
-		    message('<p class="event">Socket Status: '+socket.readyState+' (open)');
+		    socket.send("Hello");
 		}
 
 		socket.onmessage = function(msg){
-		    message('<p class="message">Received: '+msg.data);
+		    console.log("Got a message " + msg);
 		}
 
 		socket.onclose = function(){
-		    message('<p class="event">Socket Status: '+socket.readyState+' (Closed)');
+		    console.log("Closed");
 		}
 	</script>
 

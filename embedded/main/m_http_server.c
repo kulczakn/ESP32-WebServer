@@ -55,8 +55,15 @@ const static char http_ok_json_no_cache_hdr[] = "HTTP/1.1 200 OK\nContent-type: 
 #define HTTP_ROUTE_CHAT = "/chat"
 #define HTTP_ROUTE_ARCADE = "/arcade"
 
-void http_server_set_event_start(){
-	xEventGroupSetBits(http_server_event_group, HTTP_SERVER_START_BIT_0 );
+
+/**
+ *	@brief Indicates that the http server should start 
+ */
+const int HTTP_SERVER_START_BIT = BIT0
+
+void http_server_set_event_start(void)
+{
+	xEventGroupSetBits(http_server_event_group, HTTP_SERVER_START_BIT_0);
 }
 
 

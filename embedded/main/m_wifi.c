@@ -1,34 +1,3 @@
-/*
-Copyright (c) 2017 Tony Pottier
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-@file wifi_manager.c
-@author Tony Pottier
-@brief Defines all functions necessary for esp32 to connect to a wifi/scan wifis
-
-Contains the freeRTOS task and all necessary support
-
-@see https://idyl.io
-@see https://github.com/tonyp7/esp32-wifi-manager
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -70,7 +39,7 @@ TaskHandle_t wifi_task_handle = NULL;
 
 EventGroupHandle_t wifi_task_event_group;
 
-/* @brief  */
+/* @brief Indicates that a station has connected to the access point */
 const int WIFI_AP_STA_CONNECTED_BIT = BIT0;
 
 /* @brief Set automatically once the SoftAP is started */
@@ -165,7 +134,7 @@ void wifi_task( void *pvParameters ){
 uint8_t wifi_init(void)
 {
 	/* start the HTTP Server task */
-	xTaskCreate(&wifi_task, "wifi_task", 4096, NULL, 3, &wifi_task_handle);
+	// xTaskCreate(&wifi_task, "wifi_task", 4096, NULL, 3, &wifi_task_handle);
 	wifi_ap_init();
 
 	return 1;

@@ -19,8 +19,7 @@
 
 #include "m_http_server.h"
 #include "m_wifi.h"
-
-#include "WebSocket_Task.h"
+#include "m_websocket.h"
 
 #define TAG "main.c"
 
@@ -37,35 +36,6 @@ void monitoring_task(void *pvParameter)
 		printf("free heap: %d\n",esp_get_free_heap_size());
 		vTaskDelay(5000 / portTICK_PERIOD_MS);
 	}
-}
-
-//WebSocket frame receive queue
-QueueHandle_t WebSocket_rx_queue;
-
-void task_process_WebSocket( void *pvParameters ){
-    (void)pvParameters;
-
-    //frame buffer
-    WebSocket_frame_t __RX_frame;
-
-    //create WebSocket RX Queue
-    WebSocket_rx_queue = xQueueCreate(10, sizeof(WebSocket_frame_t));
-
-    while (1){
-        //receive next WebSocket frame from queue
-        if(xQueueReceive(WebSocket_rx_queue,&__RX_frame, 3*portTICK_PERIOD_MS)==pdTRUE){
-
-        	//write frame inforamtion to UART
-        	printf("New Websocket frame. Length %d, payload %.*s \r\n", __RX_frame.payload_length, __RX_frame.payload_length, __RX_frame.payload);
-
-        	//loop back frame
-        	WS_write_data(__RX_frame.payload, __RX_frame.payload_length);
-
-        	//free memory
-			if (__RX_frame.payload != NULL)
-				free(__RX_frame.payload);
-        }
-    }
 }
 
 void app_main()
@@ -85,11 +55,11 @@ void app_main()
 	ESP_LOGI(TAG, "Wifi access point task started.");
 
 	//create WebSocker receive task
-    xTaskCreate(&task_process_WebSocket, "ws_process_rx", 2048, NULL, 5, NULL);
+    xTaskCreate(&websocket_process_task, "ws_process_rx", 2048, NULL, 5, NULL);
     ESP_LOGI(TAG, "Websocket processing task started.");
 
     //Create Websocket Server Task
-    xTaskCreate(&ws_server, "ws_server", 2048, NULL, 5, NULL);
+    xTaskCreate(&websocket_server_task, "ws_server", 2048, NULL, 5, NULL);
     ESP_LOGI(TAG, "Websocket server task started.");
 
 	/* your code should go here. In debug mode we create a simple task on core 2 that monitors free heap memory */
