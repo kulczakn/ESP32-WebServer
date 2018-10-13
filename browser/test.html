@@ -1,0 +1,29 @@
+<html>
+
+<head>
+	<script>
+		var socket = new WebSocket("ws://localhost:8080");
+
+		socket.onopen = function(){
+		    message('<p class="event">Socket Status: '+socket.readyState+' (open)');
+		}
+
+		socket.onmessage = function(msg){
+		    message('<p class="message">Received: '+msg.data);
+		}
+
+		socket.onclose = function(){
+		    message('<p class="event">Socket Status: '+socket.readyState+' (Closed)');
+		}
+	</script>
+
+	<title>
+		Hello
+	</title>
+</head>
+
+<body>
+	Hello
+</body>
+
+</html>
