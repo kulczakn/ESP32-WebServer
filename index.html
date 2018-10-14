@@ -2,14 +2,15 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<canvas id="myCanvas" width="500" height="300" style="border:1px solid #000000;"> Sorry Canvas Not Supported
-		</canvas>
+		
 	</head>
 	<body>
+		<canvas id="myCanvas" width="window.innerWidth" height="window.innerHeight" style="border:1px solid #000000;"> Sorry Canvas Not Supported
+		</canvas>
 		<script>
 		var canvas = document.getElementById("myCanvas");
 		var ctx = canvas.getContext("2d");
-		var radius = 15;
+		var radius = canvas.width/25;
 		var player = {x: canvas.width * 0.30, y: canvas.height * 0.7-radius, grounded: true};
 		var grass = [];
 		var objects = [];
@@ -83,8 +84,8 @@
 				}
 				if (spawn > 40) {
 					if ((Math.random() > 0.95) || spawn >= 90 ) {
-						var w = (Math.random() * 20) + 20;
-						var h = (Math.random() * 45) + 30;
+						var w = (Math.random() * canvas.width/15) + canvas.width/20;
+						var h = (Math.random() * canvas.height/5) + canvas.height/8;
 						objects.push({x: canvas.width, y: canvas.height * 0.7 - h, widt: w, heigh: h});
 						spawn = 0;
 					}
@@ -133,9 +134,9 @@
 			}
 			else if (!moveUp && stopJump && player.grounded) {
 				stopJump = false;
-				speed = -5.0;
+				speed = -(canvas.width/100);
 				moveUp = true;
-				jumpCounter = 8;
+				jumpCounter = 7;
 			}
 		}
 
@@ -170,17 +171,17 @@
 					a = player.x - (temp.x + temp.widt);
 					b = player.y - temp.y;
 					var right = Math.sqrt(a * a + b * b);
-					a = player.x + 15 - (temp.x);
+					a = player.x + radius - (temp.x);
 					b = player.y - (temp.y + temp.heigh);
 					var bot = Math.sqrt(a * a + b * b);
 					var c = Math.min(left, right, bot);
 					//console.log("i:"+i+" x:"+temp.x+" y:"+temp.y+" l:"+left+" r:"+right);
-					if (c < 15.0) {
+					if (c < radius) {
 						return true;
 					}
-					if (player.y + 15 > temp.y && c < 15) {
+					if (player.y + radius > temp.y && c < radius) {
 						//player below
-						if (player.x + 15 > temp.x && player.x - 15 < temp.x + temp.widt) {
+						if (player.x + radius > temp.x && player.x - radius < temp.x + temp.widt) {
 							return true;
 						}
 					}
@@ -190,19 +191,22 @@
 		}
 
 		function drawObjects () {
-			ctx.beginPath();
 			for (var i = 0; i < objects.length; i++) {
 				var temp = objects[i];
-				ctx.rect(temp.x, temp.y, temp.widt, temp.heigh);
-				ctx.fillStyle = "#835C3B";
-				ctx.fill();
-				// for (var j = 0; j < Math.floor(temp.widt/4); j+=2) {
-				// 	ctx.rect(temp.x + j*4, temp.y, 4, temp.heigh);
-				// 	ctx.fillStyle = "#4c3522";
-				// 	ctx.fill();
-				// }
+				
+				for (var j = 0; j < Math.floor(temp.widt/4); j+=2) {
+					ctx.beginPath();
+					ctx.rect(temp.x + j*4, temp.y, 4, temp.heigh);
+					ctx.fillStyle = "#4c3522";
+					ctx.fill();
+					ctx.closePath();
+					ctx.beginPath();
+					ctx.rect(temp.x + (j+1)*4, temp.y, 4, temp.heigh);
+					ctx.fillStyle = "#835C3B";
+					ctx.fill();
+					ctx.closePath();
+				}
 			}
-			ctx.closePath();
 		}
 
 		function drawBackground () {
@@ -212,7 +216,12 @@
 			ctx.fill();
 			ctx.closePath();
 			ctx.beginPath();
-			ctx.rect(0, 0, canvas.width, canvas.height*0.7);
+			ctx.rect(0, canvas.height * 0.67, canvas.width, canvas.height * 0.07)
+			ctx.fillStyle = "#3b4a20";
+			ctx.fill();
+			ctx.closePath();
+			ctx.beginPath();
+			ctx.rect(0, 0, canvas.width, canvas.height*0.67);
 			ctx.fillStyle = "#000000";
 			ctx.fill();
 			ctx.closePath();
@@ -238,7 +247,7 @@
 		function populateStars() {
 			for (var i = 0; i < numStars; i ++) {
 				var x = Math.random() * canvas.width;
-				var y = Math.random() * canvas.height * 0.7;
+				var y = Math.random() * canvas.height * 0.67;
 				stars.push({x: x, y: y});
 			}
 		}
