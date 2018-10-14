@@ -1,5 +1,0 @@
-{
-	chatroom: <chatroom>,
-	chatname: <chatname>,
-	message: <message>
-}
