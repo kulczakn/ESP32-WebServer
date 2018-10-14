@@ -1,14 +1,68 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-
 <head>
-	<title>
-		Index
-	</title>
+<title>Camping Index</title>
+<style>
+
+.split {
+  height: 100%;
+  width: 50%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.left {
+  left: 0;
+  background-color: #111;
+  text-decoration : none;
+  color: white;
+}
+
+.right {
+  right: 0;
+  background-color: red;
+  text-decoration : none;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.centered img {
+  width: 150px;
+  border-radius: 50%;
+}
+
+</style>
 </head>
 
-<body>
-	Coming Soon!
+<body bgcolor="#FF5251">
+
+ <div class="split left">
+  <a style="color:white; text-decoration:none" href="/chat">
+    <div class="centered">
+      <h2>Chat</h2>
+      <p>Chat with your friends using the chat application!</p>
+    </div>
+  </a>
+</div>
+
+<div class="split right">
+  <a style="color:black; text-decoration:none" href="/game">
+    <div class="centered">
+      <h2>Game</h2>
+      <p>Pass some time with the game application!</p>
+    </div>
+  </a>
+</div> 
+<div class="credits" style="position:fixed;bottom:10%;right:33%;">Created by: Nathan Kulczak, Nick Pistolis, Nicole Dillon, Henry Latshaw, and Owen Pistolis</div>
 </body>
 
 </html>

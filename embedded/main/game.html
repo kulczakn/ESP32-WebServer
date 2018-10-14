@@ -1,14 +1,258 @@
 <!DOCTYPE html>
 <html>
+	<head>
+		<meta charset="UTF-8">
+		
+	</head>
+	<body>
+		<canvas id="myCanvas" width="window.innerWidth" height="window.innerHeight" style="border:1px solid #000000;"> Sorry Canvas Not Supported
+		</canvas>
+		<script>
+		var canvas = document.getElementById("myCanvas");
+		var ctx = canvas.getContext("2d");
+		var radius = canvas.width/25;
+		var player = {x: canvas.width * 0.30, y: canvas.height * 0.7-radius, grounded: true};
+		var grass = [];
+		var objects = [];
+		var trees = [];
+		var stars = [];
+		var spawn = 0;
+		var start = true;
+		var speed = 0;
+		var moveUp = false;
+		var accel = 0.5;
+		var stopJump = true;
+		var maxJump = 30;
+		var jumpCounter = 0;
+		var score = 0;
+		var counter = 0;
+		var scrollSpeed = 3.5;
+		var numStars = 100;
+		var scrollMax = 0;
+		populateStars();
+		//document.getElementById("myCanvas").ontouchstart = jump();
+		canvas.addEventListener("touchstart", jump);
+		canvas.addEventListener("touchend", releaseJump);
+		//write main function that waits for touch to start the game
+		function reset() {
+			canvas = document.getElementById("myCanvas");
+			ctx = canvas.getContext("2d");
+			player = {x: canvas.width * 0.30, y: canvas.height * 0.7-radius, grounded: true};
+			grass = [];
+			objects = [];
+			trees = [];
+			stars = [];
+			spawn = 0;
+			start = true;
+			speed = 0;
+			moveUp = false;
+			accel = 0.5;
+			stopJump = true;
+			maxJump = 30;
+			jumpCounter = 0;
+			score = 0;
+			counter = 0;
+			scrollSpeed = 3.5;
+			numStars = 100;
+			scrollMax = 0;
+			console.log('wut');
+			populateStars();
+		}
 
-<head>
-	<title>
-		Game
-	</title>
-</head>
+		function draw() {
+			if (start) {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				counter++;
+				if (counter > 30) {
+					counter = 0;
+					score++;
+				}
+				if (scrollMax > 180) {
+					scrollSpeed += 0.1;
+				}
+				if (!player.grounded) {
+					speed += accel;
+					player.y += speed;
+					if (speed > 0) {
+						moveUp = false;
+					}
+				}
 
-<body>
-	Coming Soon!
-</body>
+				if (!stopJump && jumpCounter > 0) {
+					jumpCounter--;
+					speed--;
+				}
+				if (spawn > 40) {
+					if ((Math.random() > 0.95) || spawn >= 90 ) {
+						var w = (Math.random() * canvas.width/15) + canvas.width/20;
+						var h = (Math.random() * canvas.height/5) + canvas.height/8;
+						objects.push({x: canvas.width, y: canvas.height * 0.7 - h, widt: w, heigh: h});
+						spawn = 0;
+					}
+				}
+				else {
+					spawn++;
+				}
+				for (var i = 0; i < objects.length; i++) {
+					var temp = objects[i];
+					temp.x -= scrollSpeed;
+					if (temp.x + temp.widt < 0) {
+						objects.splice(i, 1);
+					}
+				}
+				for (i = 0; i < numStars; i++) {
+					stars[i].x -= scrollSpeed/15;
+					if (stars[i].x < 0) {
+						stars[i].x = canvas.width;
+					}
+				}
 
+
+				if (collision()) {
+					start = false;
+				}
+				drawBackground();
+				drawPlayer();
+				drawObjects();
+				landed();
+			}
+			if (!start) {
+				ctx.beginPath();
+				ctx.fillStyle = "#FF0000";
+				ctx.font = "30px Terminal";
+				ctx.fillText("GAME OVER", canvas.width/3, canvas.height/2);
+				ctx.closePath();
+				//game over
+			}
+			requestAnimationFrame(draw);
+		}
+
+		function jump() {
+			//start game
+			if (start == false) {
+				reset();
+			}
+			else if (!moveUp && stopJump && player.grounded) {
+				stopJump = false;
+				speed = -(canvas.width/100);
+				moveUp = true;
+				jumpCounter = 7;
+			}
+		}
+
+		function releaseJump() {
+			if (!stopJump) {
+				jumpCounter = 0;
+				stopJump = true;
+			}
+		}
+
+		function landed () {
+			if (player.y > canvas.height * 0.7 - radius && !moveUp) {
+				player.grounded = true;
+			}
+			else {
+				player.grounded = false
+			}
+		}
+
+		function collision() {
+			for (var i = 0; i < objects.length; i++) {
+				var temp = objects[i];
+				// if (player.x - 15 > temp.x + temp.widt) {
+				// 	//player past log
+				// }
+				
+				if (player.x+radius > temp.x) {
+					var a = player.x - temp.x;
+					var b = player.y - temp.y;
+					//calculate distance to edges of rectangle
+					var left = Math.sqrt(a * a + b * b);
+					a = player.x - (temp.x + temp.widt);
+					b = player.y - temp.y;
+					var right = Math.sqrt(a * a + b * b);
+					a = player.x + radius - (temp.x);
+					b = player.y - (temp.y + temp.heigh);
+					var bot = Math.sqrt(a * a + b * b);
+					var c = Math.min(left, right, bot);
+					//console.log("i:"+i+" x:"+temp.x+" y:"+temp.y+" l:"+left+" r:"+right);
+					if (c < radius) {
+						return true;
+					}
+					if (player.y + radius > temp.y && c < radius) {
+						//player below
+						if (player.x + radius > temp.x && player.x - radius < temp.x + temp.widt) {
+							return true;
+						}
+					}
+				} 
+			}
+			return false;
+		}
+
+		function drawObjects () {
+			for (var i = 0; i < objects.length; i++) {
+				var temp = objects[i];
+				
+				for (var j = 0; j < Math.floor(temp.widt/4); j+=2) {
+					ctx.beginPath();
+					ctx.rect(temp.x + j*4, temp.y, 4, temp.heigh);
+					ctx.fillStyle = "#4c3522";
+					ctx.fill();
+					ctx.closePath();
+					ctx.beginPath();
+					ctx.rect(temp.x + (j+1)*4, temp.y, 4, temp.heigh);
+					ctx.fillStyle = "#835C3B";
+					ctx.fill();
+					ctx.closePath();
+				}
+			}
+		}
+
+		function drawBackground () {
+			ctx.beginPath();
+			ctx.rect(0, canvas.height * 0.7, canvas.width, canvas.height*0.3);
+			ctx.fillStyle = "#556B2F";
+			ctx.fill();
+			ctx.closePath();
+			ctx.beginPath();
+			ctx.rect(0, canvas.height * 0.67, canvas.width, canvas.height * 0.07)
+			ctx.fillStyle = "#3b4a20";
+			ctx.fill();
+			ctx.closePath();
+			ctx.beginPath();
+			ctx.rect(0, 0, canvas.width, canvas.height*0.67);
+			ctx.fillStyle = "#000000";
+			ctx.fill();
+			ctx.closePath();
+			for (var i = 0; i < numStars; i++) {
+				ctx.beginPath();
+				ctx.rect(stars[i].x, stars[i].y, 1, 1);
+				ctx.fillStyle = "#FFFFFF";
+				ctx.fill();
+				ctx.closePath();
+			}
+		}
+
+		function drawPlayer () {
+			ctx.beginPath();
+			ctx.arc(player.x, player.y, radius, 0, Math.PI*2);
+			ctx.fillStyle = "#0095DD";
+		  	ctx.fill();
+		  	ctx.font = "20px Terminal";
+		  	ctx.fillText("Score: " + score, canvas.width * 0.1, canvas.height * 0.1);
+			ctx.closePath();
+		}
+
+		function populateStars() {
+			for (var i = 0; i < numStars; i ++) {
+				var x = Math.random() * canvas.width;
+				var y = Math.random() * canvas.height * 0.67;
+				stars.push({x: x, y: y});
+			}
+		}
+
+		draw(); 
+		</script>
+	</body>
 </html>
