@@ -19,13 +19,13 @@ int chat_connection_add(struct netconn* conn)
 	{
 		if(chat_connections[i] == NULL)
 		{
-			ESP_LOGI("Adding %d to chat.", i);
+			ESP_LOGI(TAG, "Adding %d to chat.", i);
 			chat_connections[i] = conn;
 			return i;
 		}
 	}
 
-	ESP_LOGW("No more room in the chat.");
+	ESP_LOGW(TAG, "No more room in the chat.");
 	return -1;
 }
 

@@ -23,8 +23,6 @@
 
 #define TAG "main.c"
 
-TaskHandle_t task_http_server = NULL;
-
 /**
  * @brief RTOS task that periodically prints the heap memory available.
  * @note Pure debug information, should not be ever started on production code!
@@ -46,9 +44,9 @@ void app_main()
 	/* initialize flash memory */
 	nvs_flash_init();
 
-	/* start the HTTP Server task */
-	xTaskCreate(&http_server_task, "http_server_task", 2048, NULL, 5, &task_http_server);
-	ESP_LOGI(TAG, "Http server task started.");
+	/* Initialize the http module */
+	http_init();
+	// ESP_LOGI(TAG, "Http server task started.");
 
 	/* Initialize the websocket module */
 	websocket_init();
@@ -58,11 +56,8 @@ void app_main()
 	wifi_init();
 	ESP_LOGI(TAG, "Wifi access point task started.");
 
-	/* your code should go here. In debug mode we create a simple task on core 2 that monitors free heap memory */
-#if WIFI_MANAGER_DEBUG
+	// debug monitoring task
 	xTaskCreatePinnedToCore(&monitoring_task, "monitoring_task", 2048, NULL, 1, NULL, 1);
 	ESP_LOGI(TAG, "Monitoring task started.");
-#endif
-
 
 }

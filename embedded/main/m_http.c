@@ -29,34 +29,27 @@
 #define TAG "m_http.c"
 
 // http server event group
+TaskHandle_t task_http_server = NULL;
 EventGroupHandle_t http_server_event_group;
 EventBits_t uxBits;
 
 /* embedded binary data */
-extern const uint8_t style_css_start[] asm("_binary_style_css_start");
-extern const uint8_t style_css_end[]   asm("_binary_style_css_end");
-extern const uint8_t jquery_gz_start[] asm("_binary_jquery_gz_start");
-extern const uint8_t jquery_gz_end[] asm("_binary_jquery_gz_end");
-extern const uint8_t code_js_start[] asm("_binary_code_js_start");
-extern const uint8_t code_js_end[] asm("_binary_code_js_end");
 extern const uint8_t index_html_start[] asm("_binary_index_html_start");
 extern const uint8_t index_html_end[] asm("_binary_index_html_end");
+extern const uint8_t chat_html_start[] asm("_binary_chat_html_start");
+extern const uint8_t chat_html_end[] asm("_binary_chat_html_end");
+extern const uint8_t game_html_start[] asm("_binary_game_html_start");
+extern const uint8_t game_html_end[] asm("_binary_game_html_end");
 
 
 /* const http headers stored in ROM */
 const static char http_html_hdr[] = "HTTP/1.1 200 OK\nContent-type: text/html\n\n";
-const static char http_css_hdr[] = "HTTP/1.1 200 OK\nContent-type: text/css\nCache-Control: public, max-age=31536000\n\n";
-const static char http_js_hdr[] = "HTTP/1.1 200 OK\nContent-type: text/javascript\n\n";
-const static char http_jquery_gz_hdr[] = "HTTP/1.1 200 OK\nContent-type: text/javascript\nAccept-Ranges: bytes\nContent-Length: 29995\nContent-Encoding: gzip\n\n";
 const static char http_400_hdr[] = "HTTP/1.1 400 Bad Request\nContent-Length: 0\n\n";
 const static char http_404_hdr[] = "HTTP/1.1 404 Not Found\nContent-Length: 0\n\n";
-const static char http_503_hdr[] = "HTTP/1.1 503 Service Unavailable\nContent-Length: 0\n\n";
-const static char http_ok_json_no_cache_hdr[] = "HTTP/1.1 200 OK\nContent-type: application/json\nCache-Control: no-store, no-cache, must-revalidate, max-age=0\nPragma: no-cache\n\n";
 
-#define HTTP_ROUTE_HOME = "/"
+#define HTTP_ROUTE_INDEX = "/"
 #define HTTP_ROUTE_CHAT = "/chat"
-#define HTTP_ROUTE_ARCADE = "/arcade"
-
+#define HTTP_ROUTE_GAME = "/game"
 
 /**
  *	@brief Indicates that the http server should start 
@@ -84,6 +77,57 @@ char* http_server_get_header(char *request, char *header_name, int *len) {
 		return ret;
 	}
 	return NULL;
+}
+
+void http_server_netconn_serve(struct netconn *conn) {
+
+	ESP_LOGI(TAG, "Handling request from %u.", conn->socket);
+
+	struct netbuf *inbuf;
+	char *buf = NULL;
+	u16_t buflen;
+	err_t err;
+	const char new_line[2] = "\n";
+
+	err = netconn_recv(conn, &inbuf);
+	if (err == ERR_OK) {
+
+		netbuf_data(inbuf, (void**)&buf, &buflen);
+
+		/* extract the first line of the request */
+		char *save_ptr = buf;
+		char *line = strtok_r(save_ptr, new_line, &save_ptr);
+
+		if(line) {
+
+			// default page
+			if(strstr(line, "GET / ")) {
+				ESP_LOGI(TAG, "HTTP: Serving 'index.html'");
+				netconn_write(conn, http_html_hdr, sizeof(http_html_hdr) - 1, NETCONN_NOCOPY);
+				netconn_write(conn, index_html_start, index_html_end - index_html_start, NETCONN_NOCOPY);
+			}
+			else if(strstr(line, "GET /chat ")) {
+				ESP_LOGI(TAG, "HTTP: Serving 'chat.html'");
+				netconn_write(conn, http_html_hdr, sizeof(http_html_hdr) - 1, NETCONN_NOCOPY);
+				netconn_write(conn, chat_html_start, chat_html_end - chat_html_start, NETCONN_NOCOPY);
+			}
+			else if(strstr(line, "GET /game ")) {
+				ESP_LOGI(TAG, "HTTP: Serving 'game.html'");
+				netconn_write(conn, http_html_hdr, sizeof(http_html_hdr) - 1, NETCONN_NOCOPY);
+				netconn_write(conn, game_html_start, game_html_end - game_html_start, NETCONN_NOCOPY);
+			}
+			else{
+				netconn_write(conn, http_400_hdr, sizeof(http_400_hdr) - 1, NETCONN_NOCOPY);
+			}
+		}
+		else{
+			netconn_write(conn, http_404_hdr, sizeof(http_404_hdr) - 1, NETCONN_NOCOPY);
+		}
+	}
+
+	netbuf_delete(inbuf);
+
+	ESP_LOGI(TAG, "Request handled from %u.", conn->socket);
 }
 
 void http_connection_handle_task(void *pvParameters)
@@ -143,53 +187,8 @@ void http_server_task(void *pvParameters) {
 	ESP_LOGI(TAG, "HTTP server is closing.");
 }
 
-void http_server_netconn_serve(struct netconn *conn) {
-
-	ESP_LOGI(TAG, "Handling request from %u.", conn->socket);
-
-	struct netbuf *inbuf;
-	char *buf = NULL;
-	u16_t buflen;
-	err_t err;
-	const char new_line[2] = "\n";
-
-	err = netconn_recv(conn, &inbuf);
-	if (err == ERR_OK) {
-
-		netbuf_data(inbuf, (void**)&buf, &buflen);
-
-		/* extract the first line of the request */
-		char *save_ptr = buf;
-		char *line = strtok_r(save_ptr, new_line, &save_ptr);
-
-		if(line) {
-
-			// default page
-			if(strstr(line, "GET / ")) {
-				ESP_LOGI(TAG, "HTTP: Serving '/'");
-				netconn_write(conn, http_html_hdr, sizeof(http_html_hdr) - 1, NETCONN_NOCOPY);
-				netconn_write(conn, index_html_start, index_html_end - index_html_start, NETCONN_NOCOPY);
-			}
-			else if(strstr(line, "GET /jquery.js ")) {
-				ESP_LOGI(TAG, "HTTP: Serving '/jquery.js'");
-				netconn_write(conn, http_jquery_gz_hdr, sizeof(http_jquery_gz_hdr) - 1, NETCONN_NOCOPY);
-				netconn_write(conn, jquery_gz_start, jquery_gz_end - jquery_gz_start, NETCONN_NOCOPY);
-			}
-			else if(strstr(line, "GET /code.js ")) {
-				ESP_LOGI(TAG, "HTTP: Serving '/code.js'");
-				netconn_write(conn, http_js_hdr, sizeof(http_js_hdr) - 1, NETCONN_NOCOPY);
-				netconn_write(conn, code_js_start, code_js_end - code_js_start, NETCONN_NOCOPY);
-			}
-			else{
-				netconn_write(conn, http_400_hdr, sizeof(http_400_hdr) - 1, NETCONN_NOCOPY);
-			}
-		}
-		else{
-			netconn_write(conn, http_404_hdr, sizeof(http_404_hdr) - 1, NETCONN_NOCOPY);
-		}
-	}
-
-	netbuf_delete(inbuf);
-
-	ESP_LOGI(TAG, "Request handled from %u.", conn->socket);
+void http_init(void)
+{
+	/* start the HTTP Server task */
+	xTaskCreate(&http_server_task, "http_server_task", 2048, NULL, 5, &task_http_server);
 }
