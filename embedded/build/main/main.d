@@ -155,7 +155,7 @@ main.o: /mnt/c/prog/hack/TigerHacks/embedded/main/main.c \
  /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/inet.h \
  /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/sockets.h \
  /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/errno.h \
- /mnt/c/prog/hack/TigerHacks/embedded/main/m_http_server.h \
+ /mnt/c/prog/hack/TigerHacks/embedded/main/m_http.h \
  /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.h \
  /mnt/c/prog/hack/TigerHacks/embedded/main/m_websocket.h
 
@@ -471,7 +471,7 @@ main.o: /mnt/c/prog/hack/TigerHacks/embedded/main/main.c \
 
 /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/errno.h:
 
-/mnt/c/prog/hack/TigerHacks/embedded/main/m_http_server.h:
+/mnt/c/prog/hack/TigerHacks/embedded/main/m_http.h:
 
 /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.h:
 

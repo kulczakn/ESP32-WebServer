@@ -1,41 +1,8 @@
-/*
-Copyright (c) 2017 Tony Pottier
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-@file wifi_manager.h
-@author Tony Pottier
-@brief Defines all functions necessary for esp32 to connect to a wifi/scan wifis
-
-Contains the freeRTOS task and all necessary support
-
-@see https://idyl.io
-@see https://github.com/tonyp7/esp32-wifi-manager
-*/
-
 #ifndef WIFI_H_INCLUDED
 #define WIFI_H_INCLUDED
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "esp_wifi.h"
+#include "esp_wifi_types.h"
 
 /**
  * @brief If WIFI_MANAGER_DEBUG is defined, additional debug information will be sent to the standard output.
@@ -86,7 +53,7 @@ extern "C" {
  *  20 MHz minimize channel interference but is not suitable for
  *  applications with high data speeds
  */
-#define DEFAULT_AP_BANDWIDTH 			WIFI_BW_HT20
+#define DEFAULT_AP_BANDWIDTH	WIFI_BW_HT20
 
 /** @brief Defines access point's channel.
  *  Channel selection is only effective when not connected to another AP.
@@ -94,7 +61,7 @@ extern "C" {
  *  For 20 MHz: 1, 6 or 11 in USA and 1, 5, 9 or 13 in most parts of the world
  *  For 40 MHz: 3 in USA and 3 or 11 in most parts of the world
  */
-#define DEFAULT_AP_CHANNEL 			5
+#define DEFAULT_AP_CHANNEL	6
 
 /** @brief Defines access point's maximum number of clients. */
 #define AP_MAX_CONNECTIONS 	4
@@ -119,9 +86,5 @@ extern struct wifi_settings_t wifi_settings;
  *	@return 1 if successful, 0 if something failed
  */
 uint8_t wifi_init(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* WIFI_H_INCLUDED */

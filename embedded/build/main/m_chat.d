@@ -1,33 +1,49 @@
-m_wifi.o: /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.c \
- /home/nate/esp/esp-idf/components/newlib/include/stdio.h \
+m_chat.o: /mnt/c/prog/hack/TigerHacks/embedded/main/m_chat.c \
+ /home/nate/esp/esp-idf/components/newlib/include/string.h \
  /home/nate/esp/esp-idf/components/newlib/include/_ansi.h \
  /home/nate/esp/esp-idf/components/newlib/include/newlib.h \
  /home/nate/esp/esp-idf/components/newlib/include/sys/config.h \
  /home/nate/esp/esp-idf/components/newlib/include/machine/ieeefp.h \
  /home/nate/esp/esp-idf/components/newlib/include/sys/features.h \
  /home/nate/esp/esp-idf/components/esp32/include/xtensa/config/core-isa.h \
- /home/nate/esp/esp-idf/components/newlib/include/sys/cdefs.h \
- /home/nate/esp/esp-idf/components/newlib/include/machine/_default_types.h \
  /home/nate/esp/esp-idf/components/newlib/include/sys/reent.h \
  /home/nate/esp/esp-idf/components/newlib/include/_ansi.h \
  /home/nate/esp/esp-idf/components/newlib/include/sys/_types.h \
  /home/nate/esp/esp-idf/components/newlib/include/machine/_types.h \
+ /home/nate/esp/esp-idf/components/newlib/include/machine/_default_types.h \
  /home/nate/esp/esp-idf/components/newlib/include/sys/lock.h \
- /home/nate/esp/esp-idf/components/newlib/include/sys/types.h \
- /home/nate/esp/esp-idf/components/newlib/include/machine/types.h \
- /home/nate/esp/esp-idf/components/newlib/include/sys/sched.h \
- /home/nate/esp/esp-idf/components/newlib/include/sys/stdio.h \
+ /home/nate/esp/esp-idf/components/newlib/include/sys/cdefs.h \
+ /home/nate/esp/esp-idf/components/newlib/include/sys/string.h \
+ /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/api.h \
+ /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/opt.h \
+ /home/nate/esp/esp-idf/components/lwip/port/esp32/include/lwipopts.h \
  /home/nate/esp/esp-idf/components/newlib/include/stdlib.h \
  /home/nate/esp/esp-idf/components/newlib/include/machine/stdlib.h \
  /home/nate/esp/esp-idf/components/newlib/include/alloca.h \
- /home/nate/esp/esp-idf/components/newlib/include/string.h \
- /home/nate/esp/esp-idf/components/newlib/include/sys/string.h \
+ /home/nate/esp/esp-idf/components/newlib/platform_include/time.h \
+ /home/nate/esp/esp-idf/components/newlib/include/time.h \
+ /home/nate/esp/esp-idf/components/newlib/include/machine/time.h \
+ /home/nate/esp/esp-idf/components/newlib/include/sys/types.h \
+ /home/nate/esp/esp-idf/components/newlib/include/machine/types.h \
+ /home/nate/esp/esp-idf/components/newlib/include/sys/sched.h \
+ /home/nate/esp/esp-idf/components/newlib/include/unistd.h \
+ /home/nate/esp/esp-idf/components/newlib/platform_include/sys/unistd.h \
+ /home/nate/esp/esp-idf/components/newlib/include/sys/unistd.h \
+ /home/nate/esp/esp-idf/components/newlib/include/sys/time.h \
+ /home/nate/esp/esp-idf/components/newlib/include/sys/fcntl.h \
+ /home/nate/esp/esp-idf/components/newlib/include/sys/_default_fcntl.h \
+ /home/nate/esp/esp-idf/components/newlib/include/sys/stat.h \
+ /home/nate/esp/esp-idf/components/vfs/include/sys/ioctl.h \
+ /home/nate/esp/esp-idf/components/newlib/platform_include/sys/select.h \
+ /home/nate/esp/esp-idf/components/esp32/include/esp_task.h \
+ /mnt/c/prog/hack/TigerHacks/embedded/build/include/sdkconfig.h \
  /home/nate/esp/esp-idf/components/esp32/include/esp_system.h \
  /home/nate/esp/esp-idf/components/newlib/include/stdint.h \
  /home/nate/esp/esp-idf/components/newlib/include/sys/_intsup.h \
  /home/nate/esp/esp-idf/components/esp32/include/esp_err.h \
+ /home/nate/esp/esp-idf/components/newlib/include/stdio.h \
+ /home/nate/esp/esp-idf/components/newlib/include/sys/stdio.h \
  /home/nate/esp/esp-idf/components/newlib/platform_include/assert.h \
- /mnt/c/prog/hack/TigerHacks/embedded/build/include/sdkconfig.h \
  /home/nate/esp/esp-idf/components/newlib/include/assert.h \
  /home/nate/esp/esp-idf/components/esp32/include/esp_sleep.h \
  /home/nate/esp/esp-idf/components/driver/include/driver/gpio.h \
@@ -59,6 +75,14 @@ m_wifi.o: /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.c \
  /home/nate/esp/esp-idf/components/esp32/include/xtensa/xtensa-versions.h \
  /home/nate/esp/esp-idf/components/esp32/include/xtensa/config/core-matmap.h \
  /home/nate/esp/esp-idf/components/soc/esp32/include/soc/touch_channel.h \
+ /home/nate/esp/esp-idf/components/lwip/port/esp32/include/netif/dhcp_state.h \
+ /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/debug.h \
+ /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/arch.h \
+ /home/nate/esp/esp-idf/components/lwip/port/esp32/include/arch/cc.h \
+ /home/nate/esp/esp-idf/components/newlib/platform_include/errno.h \
+ /home/nate/esp/esp-idf/components/newlib/include/errno.h \
+ /home/nate/esp/esp-idf/components/newlib/include/sys/errno.h \
+ /home/nate/esp/esp-idf/components/lwip/port/esp32/include/arch/sys_arch.h \
  /home/nate/esp/esp-idf/components/freertos/include/freertos/FreeRTOS.h \
  /home/nate/esp/esp-idf/components/freertos/include/freertos/FreeRTOSConfig.h \
  /home/nate/esp/esp-idf/components/freertos/include/freertos/xtensa_config.h \
@@ -80,77 +104,38 @@ m_wifi.o: /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.c \
  /home/nate/esp/esp-idf/components/freertos/include/freertos/task.h \
  /home/nate/esp/esp-idf/components/newlib/include/limits.h \
  /home/nate/esp/esp-idf/components/freertos/include/freertos/list.h \
- /home/nate/esp/esp-idf/components/freertos/include/freertos/event_groups.h \
- /home/nate/esp/esp-idf/components/freertos/include/freertos/timers.h \
- /home/nate/esp/esp-idf/components/freertos/include/freertos/task.h \
- /home/nate/esp/esp-idf/components/esp32/include/esp_event_loop.h \
- /home/nate/esp/esp-idf/components/esp32/include/esp_event.h \
- /home/nate/esp/esp-idf/components/esp32/include/esp_wifi_types.h \
- /home/nate/esp/esp-idf/components/esp32/include/rom/queue.h \
- /home/nate/esp/esp-idf/components/esp32/include/esp_interface.h \
- /home/nate/esp/esp-idf/components/tcpip_adapter/include/tcpip_adapter.h \
- /home/nate/esp/esp-idf/components/esp32/include/rom/queue.h \
- /home/nate/esp/esp-idf/components/esp32/include/esp_wifi_types.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/ip_addr.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/opt.h \
- /home/nate/esp/esp-idf/components/lwip/port/esp32/include/lwipopts.h \
- /home/nate/esp/esp-idf/components/newlib/platform_include/time.h \
- /home/nate/esp/esp-idf/components/newlib/include/time.h \
- /home/nate/esp/esp-idf/components/newlib/include/machine/time.h \
- /home/nate/esp/esp-idf/components/newlib/include/unistd.h \
- /home/nate/esp/esp-idf/components/newlib/platform_include/sys/unistd.h \
- /home/nate/esp/esp-idf/components/newlib/include/sys/unistd.h \
- /home/nate/esp/esp-idf/components/newlib/include/sys/time.h \
- /home/nate/esp/esp-idf/components/newlib/include/sys/fcntl.h \
- /home/nate/esp/esp-idf/components/newlib/include/sys/_default_fcntl.h \
- /home/nate/esp/esp-idf/components/newlib/include/sys/stat.h \
- /home/nate/esp/esp-idf/components/vfs/include/sys/ioctl.h \
- /home/nate/esp/esp-idf/components/newlib/platform_include/sys/select.h \
- /home/nate/esp/esp-idf/components/esp32/include/esp_task.h \
- /home/nate/esp/esp-idf/components/lwip/port/esp32/include/netif/dhcp_state.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/debug.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/arch.h \
- /home/nate/esp/esp-idf/components/lwip/port/esp32/include/arch/cc.h \
- /home/nate/esp/esp-idf/components/newlib/platform_include/errno.h \
- /home/nate/esp/esp-idf/components/newlib/include/errno.h \
- /home/nate/esp/esp-idf/components/newlib/include/sys/errno.h \
- /home/nate/esp/esp-idf/components/lwip/port/esp32/include/arch/sys_arch.h \
  /home/nate/esp/esp-idf/components/freertos/include/freertos/queue.h \
  /home/nate/esp/esp-idf/components/freertos/include/freertos/semphr.h \
  /home/nate/esp/esp-idf/components/freertos/include/freertos/queue.h \
  /home/nate/esp/esp-idf/components/lwip/port/esp32/include/arch/vfs_lwip.h \
  /home/nate/esp/esp-idf/components/newlib/include/inttypes.h \
+ /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/netbuf.h \
+ /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/pbuf.h \
+ /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/err.h \
+ /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/ip_addr.h \
  /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/def.h \
  /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/ip4_addr.h \
  /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/ip6_addr.h \
  /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/def.h \
- /home/nate/esp/esp-idf/components/lwip/include/apps/dhcpserver/dhcpserver.h \
- /home/nate/esp/esp-idf/components/esp32/include/esp_wifi.h \
- /home/nate/esp/esp-idf/components/esp32/include/esp_wifi_crypto_types.h \
- /home/nate/esp/esp-idf/components/esp32/include/esp_wifi_os_adapter.h \
+ /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/sys.h \
  /home/nate/esp/esp-idf/components/log/include/esp_log.h \
  /home/nate/esp/esp-idf/components/log/include/esp_log_internal.h \
- /home/nate/esp/esp-idf/components/nvs_flash/include/nvs.h \
- /home/nate/esp/esp-idf/components/nvs_flash/include/nvs_flash.h \
- /home/nate/esp/esp-idf/components/nvs_flash/include/nvs.h \
- /home/nate/esp/esp-idf/components/spi_flash/include/esp_partition.h \
- /home/nate/esp/esp-idf/components/spi_flash/include/esp_spi_flash.h \
- /home/nate/esp/esp-idf/components/mdns/include/mdns.h \
+ /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.h \
+ /home/nate/esp/esp-idf/components/esp32/include/esp_wifi.h \
+ /home/nate/esp/esp-idf/components/esp32/include/rom/queue.h \
+ /home/nate/esp/esp-idf/components/esp32/include/esp_wifi_types.h \
+ /home/nate/esp/esp-idf/components/esp32/include/esp_interface.h \
+ /home/nate/esp/esp-idf/components/esp32/include/esp_wifi_crypto_types.h \
  /home/nate/esp/esp-idf/components/esp32/include/esp_event.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/api.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/netbuf.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/pbuf.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/err.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/sys.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/netdb.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/inet.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/sockets.h \
- /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/errno.h \
- /mnt/c/prog/hack/TigerHacks/embedded/main/m_http.h \
+ /home/nate/esp/esp-idf/components/tcpip_adapter/include/tcpip_adapter.h \
+ /home/nate/esp/esp-idf/components/esp32/include/rom/queue.h \
+ /home/nate/esp/esp-idf/components/esp32/include/esp_wifi_types.h \
+ /home/nate/esp/esp-idf/components/lwip/include/apps/dhcpserver/dhcpserver.h \
+ /home/nate/esp/esp-idf/components/esp32/include/esp_wifi_os_adapter.h \
  /mnt/c/prog/hack/TigerHacks/embedded/main/m_websocket.h \
- /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.h
+ /mnt/c/prog/hack/TigerHacks/embedded/main/m_chat.h
 
-/home/nate/esp/esp-idf/components/newlib/include/stdio.h:
+/home/nate/esp/esp-idf/components/newlib/include/string.h:
 
 /home/nate/esp/esp-idf/components/newlib/include/_ansi.h:
 
@@ -164,10 +149,6 @@ m_wifi.o: /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.c \
 
 /home/nate/esp/esp-idf/components/esp32/include/xtensa/config/core-isa.h:
 
-/home/nate/esp/esp-idf/components/newlib/include/sys/cdefs.h:
-
-/home/nate/esp/esp-idf/components/newlib/include/machine/_default_types.h:
-
 /home/nate/esp/esp-idf/components/newlib/include/sys/reent.h:
 
 /home/nate/esp/esp-idf/components/newlib/include/_ansi.h:
@@ -176,15 +157,19 @@ m_wifi.o: /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.c \
 
 /home/nate/esp/esp-idf/components/newlib/include/machine/_types.h:
 
+/home/nate/esp/esp-idf/components/newlib/include/machine/_default_types.h:
+
 /home/nate/esp/esp-idf/components/newlib/include/sys/lock.h:
 
-/home/nate/esp/esp-idf/components/newlib/include/sys/types.h:
+/home/nate/esp/esp-idf/components/newlib/include/sys/cdefs.h:
 
-/home/nate/esp/esp-idf/components/newlib/include/machine/types.h:
+/home/nate/esp/esp-idf/components/newlib/include/sys/string.h:
 
-/home/nate/esp/esp-idf/components/newlib/include/sys/sched.h:
+/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/api.h:
 
-/home/nate/esp/esp-idf/components/newlib/include/sys/stdio.h:
+/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/opt.h:
+
+/home/nate/esp/esp-idf/components/lwip/port/esp32/include/lwipopts.h:
 
 /home/nate/esp/esp-idf/components/newlib/include/stdlib.h:
 
@@ -192,9 +177,39 @@ m_wifi.o: /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.c \
 
 /home/nate/esp/esp-idf/components/newlib/include/alloca.h:
 
-/home/nate/esp/esp-idf/components/newlib/include/string.h:
+/home/nate/esp/esp-idf/components/newlib/platform_include/time.h:
 
-/home/nate/esp/esp-idf/components/newlib/include/sys/string.h:
+/home/nate/esp/esp-idf/components/newlib/include/time.h:
+
+/home/nate/esp/esp-idf/components/newlib/include/machine/time.h:
+
+/home/nate/esp/esp-idf/components/newlib/include/sys/types.h:
+
+/home/nate/esp/esp-idf/components/newlib/include/machine/types.h:
+
+/home/nate/esp/esp-idf/components/newlib/include/sys/sched.h:
+
+/home/nate/esp/esp-idf/components/newlib/include/unistd.h:
+
+/home/nate/esp/esp-idf/components/newlib/platform_include/sys/unistd.h:
+
+/home/nate/esp/esp-idf/components/newlib/include/sys/unistd.h:
+
+/home/nate/esp/esp-idf/components/newlib/include/sys/time.h:
+
+/home/nate/esp/esp-idf/components/newlib/include/sys/fcntl.h:
+
+/home/nate/esp/esp-idf/components/newlib/include/sys/_default_fcntl.h:
+
+/home/nate/esp/esp-idf/components/newlib/include/sys/stat.h:
+
+/home/nate/esp/esp-idf/components/vfs/include/sys/ioctl.h:
+
+/home/nate/esp/esp-idf/components/newlib/platform_include/sys/select.h:
+
+/home/nate/esp/esp-idf/components/esp32/include/esp_task.h:
+
+/mnt/c/prog/hack/TigerHacks/embedded/build/include/sdkconfig.h:
 
 /home/nate/esp/esp-idf/components/esp32/include/esp_system.h:
 
@@ -204,9 +219,11 @@ m_wifi.o: /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.c \
 
 /home/nate/esp/esp-idf/components/esp32/include/esp_err.h:
 
-/home/nate/esp/esp-idf/components/newlib/platform_include/assert.h:
+/home/nate/esp/esp-idf/components/newlib/include/stdio.h:
 
-/mnt/c/prog/hack/TigerHacks/embedded/build/include/sdkconfig.h:
+/home/nate/esp/esp-idf/components/newlib/include/sys/stdio.h:
+
+/home/nate/esp/esp-idf/components/newlib/platform_include/assert.h:
 
 /home/nate/esp/esp-idf/components/newlib/include/assert.h:
 
@@ -270,6 +287,22 @@ m_wifi.o: /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.c \
 
 /home/nate/esp/esp-idf/components/soc/esp32/include/soc/touch_channel.h:
 
+/home/nate/esp/esp-idf/components/lwip/port/esp32/include/netif/dhcp_state.h:
+
+/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/debug.h:
+
+/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/arch.h:
+
+/home/nate/esp/esp-idf/components/lwip/port/esp32/include/arch/cc.h:
+
+/home/nate/esp/esp-idf/components/newlib/platform_include/errno.h:
+
+/home/nate/esp/esp-idf/components/newlib/include/errno.h:
+
+/home/nate/esp/esp-idf/components/newlib/include/sys/errno.h:
+
+/home/nate/esp/esp-idf/components/lwip/port/esp32/include/arch/sys_arch.h:
+
 /home/nate/esp/esp-idf/components/freertos/include/freertos/FreeRTOS.h:
 
 /home/nate/esp/esp-idf/components/freertos/include/freertos/FreeRTOSConfig.h:
@@ -312,76 +345,6 @@ m_wifi.o: /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.c \
 
 /home/nate/esp/esp-idf/components/freertos/include/freertos/list.h:
 
-/home/nate/esp/esp-idf/components/freertos/include/freertos/event_groups.h:
-
-/home/nate/esp/esp-idf/components/freertos/include/freertos/timers.h:
-
-/home/nate/esp/esp-idf/components/freertos/include/freertos/task.h:
-
-/home/nate/esp/esp-idf/components/esp32/include/esp_event_loop.h:
-
-/home/nate/esp/esp-idf/components/esp32/include/esp_event.h:
-
-/home/nate/esp/esp-idf/components/esp32/include/esp_wifi_types.h:
-
-/home/nate/esp/esp-idf/components/esp32/include/rom/queue.h:
-
-/home/nate/esp/esp-idf/components/esp32/include/esp_interface.h:
-
-/home/nate/esp/esp-idf/components/tcpip_adapter/include/tcpip_adapter.h:
-
-/home/nate/esp/esp-idf/components/esp32/include/rom/queue.h:
-
-/home/nate/esp/esp-idf/components/esp32/include/esp_wifi_types.h:
-
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/ip_addr.h:
-
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/opt.h:
-
-/home/nate/esp/esp-idf/components/lwip/port/esp32/include/lwipopts.h:
-
-/home/nate/esp/esp-idf/components/newlib/platform_include/time.h:
-
-/home/nate/esp/esp-idf/components/newlib/include/time.h:
-
-/home/nate/esp/esp-idf/components/newlib/include/machine/time.h:
-
-/home/nate/esp/esp-idf/components/newlib/include/unistd.h:
-
-/home/nate/esp/esp-idf/components/newlib/platform_include/sys/unistd.h:
-
-/home/nate/esp/esp-idf/components/newlib/include/sys/unistd.h:
-
-/home/nate/esp/esp-idf/components/newlib/include/sys/time.h:
-
-/home/nate/esp/esp-idf/components/newlib/include/sys/fcntl.h:
-
-/home/nate/esp/esp-idf/components/newlib/include/sys/_default_fcntl.h:
-
-/home/nate/esp/esp-idf/components/newlib/include/sys/stat.h:
-
-/home/nate/esp/esp-idf/components/vfs/include/sys/ioctl.h:
-
-/home/nate/esp/esp-idf/components/newlib/platform_include/sys/select.h:
-
-/home/nate/esp/esp-idf/components/esp32/include/esp_task.h:
-
-/home/nate/esp/esp-idf/components/lwip/port/esp32/include/netif/dhcp_state.h:
-
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/debug.h:
-
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/arch.h:
-
-/home/nate/esp/esp-idf/components/lwip/port/esp32/include/arch/cc.h:
-
-/home/nate/esp/esp-idf/components/newlib/platform_include/errno.h:
-
-/home/nate/esp/esp-idf/components/newlib/include/errno.h:
-
-/home/nate/esp/esp-idf/components/newlib/include/sys/errno.h:
-
-/home/nate/esp/esp-idf/components/lwip/port/esp32/include/arch/sys_arch.h:
-
 /home/nate/esp/esp-idf/components/freertos/include/freertos/queue.h:
 
 /home/nate/esp/esp-idf/components/freertos/include/freertos/semphr.h:
@@ -392,6 +355,14 @@ m_wifi.o: /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.c \
 
 /home/nate/esp/esp-idf/components/newlib/include/inttypes.h:
 
+/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/netbuf.h:
+
+/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/pbuf.h:
+
+/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/err.h:
+
+/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/ip_addr.h:
+
 /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/def.h:
 
 /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/ip4_addr.h:
@@ -400,53 +371,37 @@ m_wifi.o: /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.c \
 
 /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/def.h:
 
-/home/nate/esp/esp-idf/components/lwip/include/apps/dhcpserver/dhcpserver.h:
-
-/home/nate/esp/esp-idf/components/esp32/include/esp_wifi.h:
-
-/home/nate/esp/esp-idf/components/esp32/include/esp_wifi_crypto_types.h:
-
-/home/nate/esp/esp-idf/components/esp32/include/esp_wifi_os_adapter.h:
+/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/sys.h:
 
 /home/nate/esp/esp-idf/components/log/include/esp_log.h:
 
 /home/nate/esp/esp-idf/components/log/include/esp_log_internal.h:
 
-/home/nate/esp/esp-idf/components/nvs_flash/include/nvs.h:
+/mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.h:
 
-/home/nate/esp/esp-idf/components/nvs_flash/include/nvs_flash.h:
+/home/nate/esp/esp-idf/components/esp32/include/esp_wifi.h:
 
-/home/nate/esp/esp-idf/components/nvs_flash/include/nvs.h:
+/home/nate/esp/esp-idf/components/esp32/include/rom/queue.h:
 
-/home/nate/esp/esp-idf/components/spi_flash/include/esp_partition.h:
+/home/nate/esp/esp-idf/components/esp32/include/esp_wifi_types.h:
 
-/home/nate/esp/esp-idf/components/spi_flash/include/esp_spi_flash.h:
+/home/nate/esp/esp-idf/components/esp32/include/esp_interface.h:
 
-/home/nate/esp/esp-idf/components/mdns/include/mdns.h:
+/home/nate/esp/esp-idf/components/esp32/include/esp_wifi_crypto_types.h:
 
 /home/nate/esp/esp-idf/components/esp32/include/esp_event.h:
 
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/api.h:
+/home/nate/esp/esp-idf/components/tcpip_adapter/include/tcpip_adapter.h:
 
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/netbuf.h:
+/home/nate/esp/esp-idf/components/esp32/include/rom/queue.h:
 
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/pbuf.h:
+/home/nate/esp/esp-idf/components/esp32/include/esp_wifi_types.h:
 
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/err.h:
+/home/nate/esp/esp-idf/components/lwip/include/apps/dhcpserver/dhcpserver.h:
 
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/sys.h:
-
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/netdb.h:
-
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/inet.h:
-
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/sockets.h:
-
-/home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/errno.h:
-
-/mnt/c/prog/hack/TigerHacks/embedded/main/m_http.h:
+/home/nate/esp/esp-idf/components/esp32/include/esp_wifi_os_adapter.h:
 
 /mnt/c/prog/hack/TigerHacks/embedded/main/m_websocket.h:
 
-/mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.h:
-/mnt/c/prog/hack/TigerHacks/embedded/main/./m_wifi.c:
+/mnt/c/prog/hack/TigerHacks/embedded/main/m_chat.h:
+/mnt/c/prog/hack/TigerHacks/embedded/main/./m_chat.c:

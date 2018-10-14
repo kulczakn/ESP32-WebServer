@@ -17,7 +17,7 @@
 #include "lwip/err.h"
 #include "lwip/netdb.h"
 
-#include "m_http_server.h"
+#include "m_http.h"
 #include "m_wifi.h"
 #include "m_websocket.h"
 
@@ -47,20 +47,16 @@ void app_main()
 	nvs_flash_init();
 
 	/* start the HTTP Server task */
-	xTaskCreate(&http_server, "http_server", 2048, NULL, 5, &task_http_server);
+	xTaskCreate(&http_server_task, "http_server_task", 2048, NULL, 5, &task_http_server);
 	ESP_LOGI(TAG, "Http server task started.");
+
+	/* Initialize the websocket module */
+	websocket_init();
+	ESP_LOGI(TAG, "Websocket module initialized");
 
 	/* Initialize wifi access point */
 	wifi_init();
 	ESP_LOGI(TAG, "Wifi access point task started.");
-
-	//create WebSocker receive task
-    xTaskCreate(&websocket_process_task, "ws_process_rx", 2048, NULL, 5, NULL);
-    ESP_LOGI(TAG, "Websocket processing task started.");
-
-    //Create Websocket Server Task
-    xTaskCreate(&websocket_server_task, "ws_server", 2048, NULL, 5, NULL);
-    ESP_LOGI(TAG, "Websocket server task started.");
 
 	/* your code should go here. In debug mode we create a simple task on core 2 that monitors free heap memory */
 #if WIFI_MANAGER_DEBUG

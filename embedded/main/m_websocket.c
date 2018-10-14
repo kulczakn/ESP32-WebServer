@@ -1,13 +1,17 @@
+#include <string.h>
+#include <stdlib.h>
+
 #include "freertos/FreeRTOS.h"
+#include "freertos/event_groups.h"
+
 #include "esp_heap_caps.h"
 #include "hwcrypto/sha.h"
 #include "esp_system.h"
 #include "esp_log.h"
 #include "wpa2/utils/base64.h"
-#include <string.h>
-#include <stdlib.h>
 
 #include "m_websocket.h"
+#include "m_chat.h"
 
 #define TAG "m_websocket.c"
 
@@ -30,9 +34,11 @@ typedef enum {
 } WS_OPCODES;
 
 // Reference to the RX queue
-QueueHandle_t WebSocket_rx_queue;
+QueueHandle_t websocket_rx_queue;
 
+// Web socket event group
 EventGroupHandle_t websocket_server_event_group;
+static EventBits_t uxBits;
 
 // Reference to open websocket connection
 static struct netconn* WS_conn = NULL;
@@ -44,17 +50,21 @@ const char WS_srv_hs[] ="HTTP/1.1 101 Switching Protocols \r\nUpgrade: websocket
 /**
  *	@brief Indicates that the http server should start 
  */
-const int WEBSOCKET_SERVER_START_BIT = BIT0
+const int WEBSOCKET_SERVER_START_BIT = BIT0;
 
-void websocket_server_set_event_start(void)
+void websocket_server_start(void)
 {
 	xEventGroupSetBits(websocket_server_event_group, WEBSOCKET_SERVER_START_BIT);
 }
 
-err_t websocket_write_data(char* p_data, size_t length) {
+/**
+ *	@brief Writes the data to the websocket connection
+ */
+err_t websocket_write_data(struct netconn* conn, char* data, size_t length) 
+{
 
 	//check if we have an open connection
-	if (WS_conn == NULL)
+	if (conn == NULL)
 		return ERR_CONN;
 
 	//currently only frames with a payload length <WS_STD_LEN are supported
@@ -73,45 +83,50 @@ err_t websocket_write_data(char* p_data, size_t length) {
 	hdr.opcode = WS_OP_TXT;
 
 	//send header
-	result = netconn_write(WS_conn, &hdr, sizeof(WS_frame_header_t), NETCONN_COPY);
+	result = netconn_write(conn, &hdr, sizeof(WS_frame_header_t), NETCONN_COPY);
 
 	//check if header was send
 	if (result != ERR_OK)
 		return result;
 
 	//send payload
-	return netconn_write(WS_conn, p_data, length, NETCONN_COPY);
+	return netconn_write(conn, data, length, NETCONN_COPY);
 }
 
-void websocket_process_task(void *pvParameters){
-    (void)pvParameters;
-
+/**
+ *	@brief this task reads the websocket frame queue and handles each frame
+ */
+void websocket_process_task(void *pvParameters)
+{
     //frame buffer
     WebSocket_frame_t rx_frame;
 
-    //create WebSocket RX Queue
-    WebSocket_rx_queue = xQueueCreate(10, sizeof(WebSocket_frame_t));
-
-    while (1){
+    while(1)
+    {
         //receive next WebSocket frame from queue
-        if(xQueueReceive(WebSocket_rx_queue, &rx_frame, 3*portTICK_PERIOD_MS)==pdTRUE){
+        if(xQueueReceive(websocket_rx_queue, &rx_frame, 3*portTICK_PERIOD_MS)==pdTRUE){
 
-        	//write frame inforamtion to UART
-        	printf("New Websocket frame. Length %d, payload %.*s \r\n", rx_frame.payload_length, rx_frame.payload_length, __RX_frame.payload);
+        	//write frame information to serial out
+        	ESP_LOGI(TAG, "WS Frame: %.*s", rx_frame.payload_length, rx_frame.payload);
 
         	//loop back frame
-        	websocket_write_data(rx_frame.payload, rx_frame.payload_length);
+        	ESP_LOGI(TAG, "Looping back frame.");
+        	// websocket_write_data(rx_frame.connection, rx_frame.payload, rx_frame.payload_length);
+
+        	chat_handle_message(rx_frame);
 
         	//free memory
 			if (rx_frame.payload != NULL)
 			{
+				ESP_LOGI(TAG, "Freeing frame.");
 				free(rx_frame.payload);
 			}
         }
     }
 }
 
-static void websocket_server_netconn_serve(struct netconn *conn) {
+static void websocket_server_netconn_serve(struct netconn *conn) 
+{
 
 	//Netbuf
 	struct netbuf *inbuf;
@@ -252,14 +267,14 @@ static void websocket_server_netconn_serve(struct netconn *conn) {
 							if ((p_payload != NULL)	&& (p_frame_hdr->opcode == WS_OP_TXT)) {
 
 								//prepare FreeRTOS message
-								WebSocket_frame_t __ws_frame;
-								__ws_frame.conenction=conn;
-								__ws_frame.frame_header=*p_frame_hdr;
-								__ws_frame.payload_length=p_frame_hdr->payload_length;
-								__ws_frame.payload=p_payload;
+								WebSocket_frame_t ws_frame;
+								ws_frame.connection=conn;
+								ws_frame.frame_header=*p_frame_hdr;
+								ws_frame.payload_length=p_frame_hdr->payload_length;
+								ws_frame.payload=p_payload;
 
 								//send message
-								xQueueSendFromISR(WebSocket_rx_queue,&__ws_frame,0);
+								xQueueSendFromISR(websocket_rx_queue, &ws_frame, 0);
 							}
 
 							// free payload buffer (in this demo done by the receive task)
@@ -282,39 +297,93 @@ static void websocket_server_netconn_serve(struct netconn *conn) {
 
 	//delete buffer
 	netbuf_delete(inbuf);
-
-	// Close the connection
-	netconn_close(conn);
-
-	//Delete connection
-	netconn_delete(conn);
-
 }
 
-void websocket_server_task(void *pvParameters) {
+void websocket_connection_handle_task(void *pvParameters)
+{
+	struct netconn *conn = (struct netconn*)pvParameters;
+
+	int chat_id = chat_connection_add(conn);
+
+	websocket_server_netconn_serve(conn);
+
+	if(chat_connection_remove(chat_id) != -1)
+	{
+		ESP_LOGI(TAG, "Removed %u from chatroom", chat_id);
+	}
+
+	ESP_LOGI(TAG, "Websocket ending with %u.", conn->socket);
+	netconn_close(conn);
+	netconn_delete(conn);
+
+	ESP_LOGI(TAG, "Deleting websocket handler task.");
+	vTaskDelete(NULL);
+}
+
+void websocket_handle_new_connection(struct netconn* conn)
+{
+	// create a task to handle the new websocket connection
+    xTaskCreate(&websocket_connection_handle_task, "ws_process_rx", 2048, (void*)conn, 5, NULL);
+    ESP_LOGI(TAG, "Websocket handler for %u started.", conn->socket);
+}
+
+void websocket_server_task(void *pvParameters)
+{
+
+	// Do not start the websocket server until it has been indicated to do so
+	ESP_LOGI(TAG, "waiting for start bit\n");
+	uxBits = xEventGroupWaitBits(websocket_server_event_group, WEBSOCKET_SERVER_START_BIT, pdFALSE, pdTRUE, portMAX_DELAY);
+	ESP_LOGI(TAG, "received start bit, starting server\n");
+
 	//connection references
-	struct netconn *conn, *newconn;
+	struct netconn *conn;
+	err_t err;
 
 	//set up new TCP listener
 	conn = netconn_new(NETCONN_TCP);
-	netconn_bind(conn, NULL, WS_PORT);
+	netconn_bind(conn, IP_ADDR_ANY, WS_PORT);
 	netconn_listen(conn);
 
-	ESP_LOGI(TAG, "Web Socket server listening on port %u", WS_PORT);
+	ESP_LOGI(TAG, "Websocket Server listening...");
 
-	// Handle connections
-	while (netconn_accept(conn, &newconn) == ERR_OK)
-	{
-		ESP_LOGI(TAG, "Handling new connection from %u", newconn->socket);
-		websocket_server_netconn_serve(newconn);
-	}
+	do {
+		struct netconn *newconn;
 
-	//close connection
+		err = netconn_accept(conn, &newconn);
+
+		if (err == ERR_OK) {
+			websocket_handle_new_connection(newconn);
+		}
+
+		vTaskDelay( (TickType_t)10); /* allows the freeRTOS scheduler to take over if needed */
+
+	} while(err == ERR_OK);
+
+	// close main connection
 	netconn_close(conn);
 	netconn_delete(conn);
+
+	ESP_LOGI(TAG, "Websocket server is closing.");
 }
+
 
 uint8_t websocket_init(void)
 {
+	// create the websocket event group
 	websocket_server_event_group = xEventGroupCreate();
+	ESP_LOGI(TAG, "Websocket event group created.");
+
+	// create the websocket rx queue
+    websocket_rx_queue = xQueueCreate(10, sizeof(WebSocket_frame_t));
+    ESP_LOGI(TAG, "Websocket rx queue created.");
+
+	// create websocket receive task
+    xTaskCreate(&websocket_process_task, "ws_process_rx", 2048, NULL, 5, NULL);
+    ESP_LOGI(TAG, "Websocket processing task started.");
+
+    // create websocket server task
+    xTaskCreate(&websocket_server_task, "ws_server", 2048, NULL, 5, NULL);
+    ESP_LOGI(TAG, "Websocket server task started.");
+
+    return 1;
 }

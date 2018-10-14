@@ -17,7 +17,8 @@
 #include "lwip/err.h"
 #include "lwip/netdb.h"
 
-#include "m_http_server.h"
+#include "m_http.h"
+#include "m_websocket.h"
 #include "m_wifi.h"
 
 /**
@@ -118,24 +119,29 @@ uint8_t wifi_ap_init(void)
 	/* wait for access point to start */
 	xEventGroupWaitBits(wifi_task_event_group, WIFI_AP_STARTED, pdFALSE, pdTRUE, portMAX_DELAY);
 
-	http_server_set_event_start();
-
 	return 1;
 }
 
-void wifi_task( void *pvParameters ){
+// void wifi_task( void *pvParameters ){
 
-	while(1)
-	{
-		vTaskDelay( (TickType_t)500);
-	}
-}
+// 	while(1)
+// 	{
+// 		vTaskDelay( (TickType_t)500);
+// 	}
+// }
 
 uint8_t wifi_init(void)
 {
-	/* start the HTTP Server task */
-	// xTaskCreate(&wifi_task, "wifi_task", 4096, NULL, 3, &wifi_task_handle);
-	wifi_ap_init();
+	uint8_t ret = 0;
 
-	return 1;
+	// if the ap succesfully starts the start the websocket and http servers
+	if(wifi_ap_init())
+	{
+		http_server_start();
+		websocket_server_start();
+
+		ret = 1;
+	}
+
+	return ret;
 }

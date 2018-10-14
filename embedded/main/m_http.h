@@ -34,13 +34,10 @@ function to process requests, decode URLs, serve files, etc. etc.
 #ifndef HTTP_SERVER_H_INCLUDED
 #define HTTP_SERVER_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-void http_server(void *pvParameters);
+void http_server_task(void *pvParameters);
 void http_server_netconn_serve(struct netconn *conn);
-void http_server_set_event_start();
+void http_server_start();
 
 /**
  * @brief gets a char* pointer to the first occurence of header_name withing the complete http request request.
@@ -54,9 +51,5 @@ void http_server_set_event_start();
  * @return pointer to the beginning of the header value.
  */
 char* http_server_get_header(char *request, char *header_name, int *len);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
