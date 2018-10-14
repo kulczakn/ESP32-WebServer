@@ -41,12 +41,12 @@
 #define DEFAULT_AP_SSID_HIDDEN 		0
 
 /** @brief Defines access point's name. */
-#define DEFAULT_AP_SSID 			"esp32"
+#define DEFAULT_AP_SSID 			"CampingBuddy"
 
 /** @brief Defines access point's password.
  *	@warning In the case of an open access point, the password must be a null string "" or "\0" if you want to be verbose but waste one byte.
  */
-#define DEFAULT_AP_PASSWORD 		"esp32pwd"
+#define DEFAULT_AP_PASSWORD 		"password"
 
 /** @brief Defines access point's bandwidth.
  *  Value: WIFI_BW_HT20 for 20 MHz  or  WIFI_BW_HT40 for 40 MHz

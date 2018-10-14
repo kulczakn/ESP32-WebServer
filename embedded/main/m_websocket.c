@@ -127,7 +127,6 @@ void websocket_process_task(void *pvParameters)
 
 static void websocket_server_netconn_serve(struct netconn *conn) 
 {
-
 	//Netbuf
 	struct netbuf *inbuf;
 

@@ -85,7 +85,7 @@ void http_server_netconn_serve(struct netconn *conn) {
 
 	struct netbuf *inbuf;
 	char *buf = NULL;
-	u16_t buflen;
+	uint16_t buflen;
 	err_t err;
 	const char new_line[2] = "\n";
 

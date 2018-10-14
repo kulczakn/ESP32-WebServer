@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := wifi_manager
+PROJECT_NAME := camping_buddy
 
 include $(IDF_PATH)/make/project.mk
 
