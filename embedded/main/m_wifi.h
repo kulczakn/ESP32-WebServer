@@ -44,9 +44,8 @@
 #define DEFAULT_AP_SSID 			"CampingBuddy"
 
 /** @brief Defines access point's password.
- *	@warning In the case of an open access point, the password must be a null string "" or "\0" if you want to be verbose but waste one byte.
  */
-#define DEFAULT_AP_PASSWORD 		"password"
+#define DEFAULT_AP_PASSWORD 		"e710b92817"
 
 /** @brief Defines access point's bandwidth.
  *  Value: WIFI_BW_HT20 for 20 MHz  or  WIFI_BW_HT40 for 40 MHz
@@ -73,14 +72,13 @@
 /**
  * The actual WiFi settings in use
  */
-struct wifi_settings_t{
+typedef struct {
 	uint8_t ap_ssid[MAX_SSID_SIZE];
 	uint8_t ap_pwd[MAX_PASSWORD_SIZE];
 	uint8_t ap_channel;
 	uint8_t ap_ssid_hidden;
 	wifi_bandwidth_t ap_bandwidth;
-};
-extern struct wifi_settings_t wifi_settings;
+} wifi_settings_t;
 
 /** @brief Initializes the ESP's ap mode so the http server can start
  *	@return 1 if successful, 0 if something failed

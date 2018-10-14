@@ -44,6 +44,9 @@ void app_main()
 	/* initialize flash memory */
 	nvs_flash_init();
 
+	/* Initialize the module extension framework */
+	module_init();
+
 	/* Initialize the http module */
 	http_init();
 	// ESP_LOGI(TAG, "Http server task started.");
