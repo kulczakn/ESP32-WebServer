@@ -135,10 +135,6 @@ main.o: /mnt/c/prog/hack/TigerHacks/embedded/main/main.c \
  /home/nate/esp/esp-idf/components/lwip/include/apps/dhcpserver/dhcpserver.h \
  /home/nate/esp/esp-idf/components/esp32/include/esp_wifi_os_adapter.h \
  /home/nate/esp/esp-idf/components/esp32/include/esp_event_loop.h \
- /home/nate/esp/esp-idf/components/nvs_flash/include/nvs_flash.h \
- /home/nate/esp/esp-idf/components/nvs_flash/include/nvs.h \
- /home/nate/esp/esp-idf/components/spi_flash/include/esp_partition.h \
- /home/nate/esp/esp-idf/components/spi_flash/include/esp_spi_flash.h \
  /home/nate/esp/esp-idf/components/log/include/esp_log.h \
  /home/nate/esp/esp-idf/components/log/include/esp_log_internal.h \
  /home/nate/esp/esp-idf/components/freertos/include/freertos/event_groups.h \
@@ -155,9 +151,8 @@ main.o: /mnt/c/prog/hack/TigerHacks/embedded/main/main.c \
  /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/inet.h \
  /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/sockets.h \
  /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/errno.h \
- /mnt/c/prog/hack/TigerHacks/embedded/main/m_http.h \
- /mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.h \
- /mnt/c/prog/hack/TigerHacks/embedded/main/m_websocket.h
+ /mnt/c/prog/hack/TigerHacks/embedded/main/m_system.h \
+ /mnt/c/prog/hack/TigerHacks/embedded/main/m_module.h
 
 /home/nate/esp/esp-idf/components/newlib/include/stdio.h:
 
@@ -431,14 +426,6 @@ main.o: /mnt/c/prog/hack/TigerHacks/embedded/main/main.c \
 
 /home/nate/esp/esp-idf/components/esp32/include/esp_event_loop.h:
 
-/home/nate/esp/esp-idf/components/nvs_flash/include/nvs_flash.h:
-
-/home/nate/esp/esp-idf/components/nvs_flash/include/nvs.h:
-
-/home/nate/esp/esp-idf/components/spi_flash/include/esp_partition.h:
-
-/home/nate/esp/esp-idf/components/spi_flash/include/esp_spi_flash.h:
-
 /home/nate/esp/esp-idf/components/log/include/esp_log.h:
 
 /home/nate/esp/esp-idf/components/log/include/esp_log_internal.h:
@@ -471,9 +458,7 @@ main.o: /mnt/c/prog/hack/TigerHacks/embedded/main/main.c \
 
 /home/nate/esp/esp-idf/components/lwip/lwip/src/include/lwip/errno.h:
 
-/mnt/c/prog/hack/TigerHacks/embedded/main/m_http.h:
+/mnt/c/prog/hack/TigerHacks/embedded/main/m_system.h:
 
-/mnt/c/prog/hack/TigerHacks/embedded/main/m_wifi.h:
-
-/mnt/c/prog/hack/TigerHacks/embedded/main/m_websocket.h:
+/mnt/c/prog/hack/TigerHacks/embedded/main/m_module.h:
 /mnt/c/prog/hack/TigerHacks/embedded/main/./main.c:

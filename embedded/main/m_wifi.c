@@ -24,7 +24,7 @@
 /**
  * The actual WiFi settings in use
  */
-struct wifi_settings_t wifi_settings = {
+wifi_settings_t wifi_settings = {
 	.ap_ssid = DEFAULT_AP_SSID,
 	.ap_pwd = DEFAULT_AP_PASSWORD,
 	.ap_channel = DEFAULT_AP_CHANNEL,
@@ -122,13 +122,6 @@ uint8_t wifi_ap_init(void)
 	return 1;
 }
 
-// void wifi_task( void *pvParameters ){
-
-// 	while(1)
-// 	{
-// 		vTaskDelay( (TickType_t)500);
-// 	}
-// }
 
 uint8_t wifi_init(void)
 {
@@ -144,4 +137,9 @@ uint8_t wifi_init(void)
 	}
 
 	return ret;
+}
+
+void wifi_wait(void)
+{
+	xEventGroupWaitBits(wifi_task_event_group, WIFI_AP_STARTED, pdFALSE, pdTRUE, portMAX_DELAY);
 }

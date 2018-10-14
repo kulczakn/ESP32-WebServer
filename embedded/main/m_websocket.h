@@ -48,5 +48,7 @@ void websocket_server_start(void);
  */
 uint8_t websocket_init(void);
 
+void websocket_wait(void);
+
 
 #endif /* _M_WEBSOCKET_H */

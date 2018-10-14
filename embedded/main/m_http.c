@@ -25,6 +25,7 @@
 
 #include "m_http.h"
 #include "m_wifi.h"
+#include "m_system.h"
 
 #define TAG "m_http.c"
 
@@ -52,32 +53,9 @@ const static char http_404_hdr[] = "HTTP/1.1 404 Not Found\nContent-Length: 0\n\
 #define HTTP_ROUTE_GAME = "/game"
 
 /**
- *	@brief Indicates that the http server should start 
+ *	@brief Indicates that the HTTP server has started
  */
-const int HTTP_SERVER_START_BIT = BIT0;
-
-void http_server_start(void)
-{
-	xEventGroupSetBits(http_server_event_group, HTTP_SERVER_START_BIT);
-}
-
-char* http_server_get_header(char *request, char *header_name, int *len) {
-	*len = 0;
-	char *ret = NULL;
-	char *ptr = NULL;
-
-	ptr = strstr(request, header_name);
-	if (ptr) {
-		ret = ptr + strlen(header_name);
-		ptr = ret;
-		while (*ptr != '\0' && *ptr != '\n' && *ptr != '\r') {
-			(*len)++;
-			ptr++;
-		}
-		return ret;
-	}
-	return NULL;
-}
+const int HTTP_SERVER_STARTED = BIT0;
 
 void http_server_netconn_serve(struct netconn *conn) {
 
@@ -150,14 +128,11 @@ void http_handle_new_connection(struct netconn* conn)
     ESP_LOGI(TAG, "HTTP handler for %u started.", conn->socket);
 }
 
+
 void http_server_task(void *pvParameters) {
-
-	http_server_event_group = xEventGroupCreate();
-
 	/* do not start the task until wifi_manager says it's safe to do so! */
-	ESP_LOGI(TAG, "waiting for start bit");
-	uxBits = xEventGroupWaitBits(http_server_event_group, HTTP_SERVER_START_BIT, pdFALSE, pdTRUE, portMAX_DELAY);
-	ESP_LOGI(TAG, "received start bit, starting server\n");
+	ESP_LOGI(TAG, "waiting for wifi ap to start.");
+	system_wifi_wait();
 
 	struct netconn *conn;
 	err_t err;
@@ -165,6 +140,7 @@ void http_server_task(void *pvParameters) {
 	netconn_bind(conn, IP_ADDR_ANY, 80);
 	netconn_listen(conn);
 
+	xEventGroupSetBits(http_server_event_group, HTTP_SERVER_STARTED);
 	ESP_LOGI(TAG, "HTTP Server listening...");
 
 	do {
@@ -176,7 +152,7 @@ void http_server_task(void *pvParameters) {
 			http_handle_new_connection(newconn);
 		}
 
-		vTaskDelay( (TickType_t)10); /* allows the freeRTOS scheduler to take over if needed */
+		vTaskDelay( (TickType_t)10);
 
 	} while(err == ERR_OK);
 
@@ -189,6 +165,17 @@ void http_server_task(void *pvParameters) {
 
 void http_init(void)
 {
+	/* Create event group for waiting and stuff */
+	http_server_event_group = xEventGroupCreate();
+
 	/* start the HTTP Server task */
 	xTaskCreate(&http_server_task, "http_server_task", 2048, NULL, 5, &task_http_server);
+}
+
+/**
+ *	@brief block and wait for the http server to start
+ */
+void http_wait(void)
+{
+	xEventGroupWaitBits(http_server_event_group, HTTP_SERVER_STARTED, pdFALSE, pdTRUE, portMAX_DELAY);
 }

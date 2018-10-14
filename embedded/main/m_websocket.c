@@ -12,14 +12,15 @@
 
 #include "m_websocket.h"
 #include "m_chat.h"
+#include "m_system.h"
 
 #define TAG "m_websocket.c"
 
-#define WS_PORT				9998	/**< \brief TCP Port for the Server*/
-#define WS_CLIENT_KEY_L		24		/**< \brief Length of the Client Key*/
-#define SHA1_RES_L			20		/**< \brief SHA1 result*/
-#define WS_STD_LEN			125		/**< \brief Maximum Length of standard length frames*/
-#define WS_SPRINTF_ARG_L	4		/**< \brief Length of sprintf argument for string (%.*s)*/
+#define WS_PORT				9998	/* @brief TCP Port for the Server*/
+#define WS_CLIENT_KEY_L		24		/* @brief Length of the Client Key*/
+#define SHA1_RES_L			20		/* @brief SHA1 result*/
+#define WS_STD_LEN			125		/* @brief Maximum Length of standard length frames*/
+#define WS_SPRINTF_ARG_L	4		/* @brief Length of sprintf argument for string (%.*s)*/
 
 /** 
  *	\brief Opcode according to RFC 6455
@@ -38,24 +39,17 @@ QueueHandle_t websocket_rx_queue;
 
 // Web socket event group
 EventGroupHandle_t websocket_server_event_group;
-static EventBits_t uxBits;
 
-// Reference to open websocket connection
-static struct netconn* WS_conn = NULL;
-
+// Magic strings!
+// These are for the websocket handshake protocol
 const char WS_sec_WS_keys[] = "Sec-WebSocket-Key:";
 const char WS_sec_conKey[] = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 const char WS_srv_hs[] ="HTTP/1.1 101 Switching Protocols \r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: %.*s\r\n\r\n";
 
 /**
- *	@brief Indicates that the http server should start 
+ *	@brief Indicates that the websocket server has started
  */
-const int WEBSOCKET_SERVER_START_BIT = BIT0;
-
-void websocket_server_start(void)
-{
-	xEventGroupSetBits(websocket_server_event_group, WEBSOCKET_SERVER_START_BIT);
-}
+const int WEBSOCKET_SERVER_STARTED = BIT0;
 
 /**
  *	@brief Writes the data to the websocket connection
@@ -67,7 +61,7 @@ err_t websocket_write_data(struct netconn* conn, char* data, size_t length)
 	if (conn == NULL)
 		return ERR_CONN;
 
-	//currently only frames with a payload length <WS_STD_LEN are supported
+	//Only frames with a payload length < WS_STD_LEN are supported
 	if (length > WS_STD_LEN)
 		return ERR_VAL;
 
@@ -216,9 +210,6 @@ static void websocket_server_netconn_serve(struct netconn *conn)
 					//free handshake memory
 					free(p_payload);
 
-					//set pointer to open WebSocket connection
-					WS_conn = conn;
-
 					//Wait for new data
 					while (netconn_recv(conn, &inbuf) == ERR_OK) {
 
@@ -291,9 +282,6 @@ static void websocket_server_netconn_serve(struct netconn *conn)
 		} //receive handshake
 	} //p_SHA1_Inp!=NULL&p_SHA1_result!=NULL
 
-	//release pointer to open WebSocket connection
-	WS_conn = NULL;
-
 	//delete buffer
 	netbuf_delete(inbuf);
 }
@@ -329,10 +317,8 @@ void websocket_handle_new_connection(struct netconn* conn)
 void websocket_server_task(void *pvParameters)
 {
 
-	// Do not start the websocket server until it has been indicated to do so
-	ESP_LOGI(TAG, "waiting for start bit\n");
-	uxBits = xEventGroupWaitBits(websocket_server_event_group, WEBSOCKET_SERVER_START_BIT, pdFALSE, pdTRUE, portMAX_DELAY);
-	ESP_LOGI(TAG, "received start bit, starting server\n");
+	// Do not start the websocket server until the wifi ap is up
+	system_wifi_wait();
 
 	//connection references
 	struct netconn *conn;
@@ -343,6 +329,8 @@ void websocket_server_task(void *pvParameters)
 	netconn_bind(conn, IP_ADDR_ANY, WS_PORT);
 	netconn_listen(conn);
 
+	// Indicate the server has started
+	xEventGroupSetBits(websocket_server_event_group, WEBSOCKET_SERVER_STARTED);
 	ESP_LOGI(TAG, "Websocket Server listening...");
 
 	do {
@@ -385,4 +373,9 @@ uint8_t websocket_init(void)
     ESP_LOGI(TAG, "Websocket server task started.");
 
     return 1;
+}
+
+void websocket_wait(void)
+{
+	xEventGroupWaitBits(websocket_server_event_group, WEBSOCKET_SERVER_STARTED, pdFALSE, pdTRUE, portMAX_DELAY);
 }

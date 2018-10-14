@@ -85,4 +85,9 @@ typedef struct {
  */
 uint8_t wifi_init(void);
 
+/**
+ *	@brief Blocks and waits for the access point to start. 
+ */
+void wifi_wait(void);
+
 #endif /* WIFI_H_INCLUDED */
