@@ -3,29 +3,109 @@
 
 <head>
 	<script>
-		var socket = new WebSocket("ws://192.168.1.1:9998");
+		var socket;
+		var room = ""
+		var name = ""
 
-		socket.onopen = function() {
-		    socket.send("/chat /join");
-		};
+		function connect()
+		{
+			socket = new WebSocket("ws://192.168.1.1:9998");
 
-		socket.onmessage = function(message) {
-			console.log("WebSocket message received:", message);
-		};
+			socket.onopen = function() {
+				return;
+			};
 
-		socket.onclose = function() {
-		    console.log("Closed");
-		};
+			socket.onmessage = function(message) {
+				console.log("GOT:", message.data);
+
+				message_dict = JSON.parse(message.data);
+
+				if(message_dict.chatroom == room)
+				{
+					message_area = document.getElementById('message_output');
+					message_area.innerHTML += "<p>" + message_dict.chatname + ": " + message_dict.message + "</p>\n";
+				}
+
+			};
+
+			socket.onclose = function() {
+			    console.log("Closed");
+			};
+		}
+
+		function sendMessage()
+		{
+			if(!socket)
+			{
+				error("You must set a name before you send messages");
+				return;
+			}
+
+			var text = document.getElementById('text_input').value
+
+			json_message = JSON.stringify({"chatroom": room, "chatname": name, "message": text});
+
+			socket.send(json_message);
+			console.log("SENT: ", json_message);
+		}
+
+		function enterRoom()
+		{
+			if(!socket)
+			{
+				connect();
+			}
+
+			message_area = document.getElementById('message_output');
+			message_area.innerHTML = "";
+
+			name = document.getElementById('name_input').value;
+
+			current_name_p = document.getElementById('current_name');
+			current_name_p.innerHTML = "<p id=\"current_name\">Current Name: " + name + "</p>";
+
+			room = document.getElementById('room_input').value;
+
+			current_room_p = document.getElementById('current_room');
+			current_room_p.innerHTML = "<p id=\"current_name\">Current Room: " + room + "</p>";
+
+			json_message = JSON.stringify({"chatname": "Server", "chatroom": room, "message": name + " has joined " + room});
+
+		    socket.send(json_message);
+		}
+
+		function error(error_message)
+		{
+			error = document.getElementById('error')
+
+			error.innerHTML = error_message
+		}
 
 	</script>
 
 	<title>
-		Hello
+		Chat room v0.1
 	</title>
 </head>
 
 <body>
-	Hello
+	<p id="error"></p>
+	<p id="current_name">Current Name: </p>
+	<p id="current_room">Current Room: </p>
+	<br>
+	Name:
+	<textarea id="name_input"></textarea><br>
+
+	Room:
+	<textarea id="room_input"></textarea><br>
+	<button onclick="enterRoom()">Enter Room</button><br><br>
+
+	Message:
+	<textarea id="text_input"></textarea>
+	<br>
+	<button onclick="sendMessage()" id="message_button">Send</button>
+	<br>
+	<div id="message_output"></div>
 </body>
 
 </html>

@@ -1,3 +1,5 @@
-chatroom: <chatroom>\n
-chatname: <chatname>\n
-message: <message>\n
+{
+	chatroom: <chatroom>,
+	chatname: <chatname>,
+	message: <message>
+}

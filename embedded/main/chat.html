@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Camping Chat App</title>
+        <script src="websocket_client.js"></script>
+        <style media="screen">
+        body {
+          font:12px arial;
+          color: #222;
+          text-align:center;
+          padding:35px; }
+#controls, p, span {
+  margin:0;
+  padding:0; }
+input { font:12px arial; }
+a {
+  color:#0000FF;
+  text-decoration:none; }
+a:hover { text-decoration:underline; }
+#wrapper, #loginform {
+  margin:0 auto;
+  padding-bottom:25px;
+  background:#66CCFF;
+  width:504px;
+  border:1px solid #ACD8F0; }
+#chatbox {
+  text-align:left;
+  margin:0 auto;
+  margin-bottom:25px;
+  padding:10px;
+  background:#fff;
+  height:270px;
+  width:430px;
+  border:1px solid #ACD8F0;
+  overflow:auto; }
+#chatname {
+  width:395px;
+  border:1px solid #ACD8F0;
+  margin-left: 41px;
+  float:left;}
+  #ChatRoom {
+    width:395px;
+    border:1px solid #ACD8F0;
+    margin-left: 41px;
+    float:left;}
+#msg {
+  width:395px;
+  border:1px solid #ACD8F0;
+  margin-left: 25px; }
+#submit { width: 60px; }
+        </style>
+    </head>
+    <body>
+        <div id="ws_support"></div>
+
+        <div id="wrapper">
+            <div id="menu">
+                <h3 class="welcome">Welcome to our chat application</h3>
+            </div>
+
+            <div id="chatbox"></div>
+
+            <div id ="controls">
+                <input name="ChatRoom" type="text" id="ChatRoom" size="67" placeholder="Type your active chat room here"/>
+                <input name="chatname" type="text" id="chatname" size="67" placeholder="Type your name here"/>
+                <input name="msg" type="text" id="msg" size="67" placeholder="Type your message here" />
+                <input name="sendmsg" type="submit"  id="sendmsg" value="Send" onclick="doSend(document.getElementById('msg').value)" />
+            </div>
+        </div>
+    </body>
+</html>
