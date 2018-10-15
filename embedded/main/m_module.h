@@ -2,6 +2,9 @@
 #define _M_MODULE_H
 
 #define MODULE_MAX_COUNT 6
+#define NO_MODULE 255;
+
+typedef uint8_t m_module_t;
 
 typedef enum {
 	M_INIT_NONE = 0,

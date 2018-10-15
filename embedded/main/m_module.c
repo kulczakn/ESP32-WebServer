@@ -17,9 +17,9 @@ m_init_t* module_start(void)
 	return module_list;
 }
 
-int module_register(m_init_t (*func)(void))
+m_module_t module_register(m_init_t (*func)(void))
 {
-	int ret = -1;
+	m_module_t ret = NO_MODULE;
 
 	if(module_count < MODULE_MAX_COUNT)
 	{
