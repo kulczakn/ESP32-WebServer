@@ -1,4 +1,4 @@
-# Welcome to Camping Buddy
+# Welcome to the ESP32 WebServer (Camping Buddy)
 
 ## Use
 
